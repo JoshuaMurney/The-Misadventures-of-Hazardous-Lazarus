@@ -8,7 +8,7 @@ Player::Player(SDL_Rect src, SDL_Rect dest, SDL_Texture* spr, int w, int h) : Sp
 	accelX = accelY = velocityX = velocityY = 0;
 	maxVelX = 10;
 	maxVelY = 60.0;
-	grav = 6.0;
+	grav = 8.0;
 	drag = 0.88;
 }
  
@@ -35,14 +35,16 @@ void Player::TakeDamage(float hp) {
 }
 
 void Player::Update() {
-	Move();
-}
-
-void Player::Move() {
 	velocityX += accelX;
 	velocityX *= (isGrounded ? drag : 1.0);
 	velocityX = std::min(std::max(velocityX, -maxVelX), maxVelX);
 	dest.x += (int)velocityX;
+
+	velocityY += accelY + grav * 0.1;
+	velocityY = std::min(std::max(velocityY, -maxVelY), (grav));
+	dest.y += (int)velocityY;
+
+	accelX = accelY = 0.0;
 }
 
 void Player::Jump() {

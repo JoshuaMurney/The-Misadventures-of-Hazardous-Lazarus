@@ -37,10 +37,15 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 	keystates = SDL_GetKeyboardState(nullptr);
 	running = true;
 
-	player = { {0, 0, 48, 126}, {100, 100, 48, 126}, lazarusSide, PLAYER_W, PLAYER_H };
+	player = { {0, 0, 48, 126}, {600, 100, 48, 126}, lazarusSide, PLAYER_W, PLAYER_H };
 	for (int i = 0; i < 20; i++) {
-		floor[i] = { {0, 0, 48, 48}, {((48 * i)), (48 * 11), 48, 48}, ground, 48, 48 };
+		floor[i] = { {0, 0, 48, 48}, {(48 * i), (48 * 11), 48, 48}, ground, 48, 48 };
 	}
+	for (int j = 0; j < 5; j++) {
+		floor[(j + 20)] = { {0, 0, 48, 48}, {(480 + (48 * j)), (48 * 7), 48, 48}, ground, 48, 48 };
+	}
+	floor[25] = { {0, 0, 48, 48}, {480, (48 * 6), 48, 48}, ground, 48, 48 };
+	floor[26] = { {0, 0, 48, 48}, {480, (48 * 5), 48, 48}, ground, 48, 48 };
 
 	cout << "Engine Running successfully" << endl;
 	return true;
@@ -58,18 +63,49 @@ void Engine::HandleEvents() {
 	}
 }
 
+void Engine::CheckCollision() {
+	for (int i = 0; i < 27; i++) {
+		if (SDL_HasIntersection(player.GetDest(), floor[i].GetDest())) {
+			//Did Player hit the ground from the top?
+			if (player.GetDest()->y + player.GetDest()->h - (float)player.GetVelY() <= floor[i].GetDest()->y) {
+				player.SetGrounded(true);
+				player.StopY();
+				player.GetDest()->y = floor[i].GetDest()->y - player.GetDest()->h;
+			}
+			//Did player hit the ground from the bottom?
+			else if (player.GetDest()->y - (float)player.GetVelY() >= (floor[i].GetDest()->y + floor[i].GetDest()->h)) {
+				player.StopY();
+				player.GetDest()->y = floor[i].GetDest()->y + floor[i].GetDest()->h;
+			}
+			//Did player hit the ground from the LEFT side?
+			else if (player.GetDest()->x + player.GetDest()->w - (float)player.GetVelX() <= floor[i].GetDest()->x) {
+				player.StopX();
+				player.GetDest()->x = floor[i].GetDest()->x - player.GetDest()->w - 1;
+			}
+			//Did player hit the ground from the RIGHT side?
+			else if (player.GetDest()->x - (float)player.GetVelX() >= (floor[i].GetDest()->x + floor[i].GetDest()->w)) {
+				player.StopX();
+				player.GetDest()->x = floor[i].GetDest()->x + floor[i].GetDest()->w + 1;
+			}
+		}
+	}
+}
+
 //=== UPDATE: anything that may be updated on a frame-by-frame basis goes here ===
 void Engine::Update() {
-	if (KeyDown(SDL_SCANCODE_A) && player.GetDest()->x > LEFT_BORDER) {
+	if (KeyDown(SDL_SCANCODE_A) && player.GetDest()->x > LEFT_BORDER)
 		player.SetAccelX(-1.0);
-		player.Move();
-	}
-	else if (KeyDown(SDL_SCANCODE_D) && player.GetDest()->x < RIGHT_BORDER) {
+	else if (KeyDown(SDL_SCANCODE_D) && player.GetDest()->x < RIGHT_BORDER)
 		player.SetAccelX(1.0);
-		player.Move();
-	}
 	else
 		player.StopX();
+
+	if (KeyDown(SDL_SCANCODE_SPACE) && player.IsGrounded()) {
+		player.SetAccelY(-20.0);
+		player.SetGrounded(false);
+	}
+	player.Update();
+	CheckCollision();
 }
 
 //=== RENDER: Anything display related goes here ===
@@ -77,7 +113,7 @@ void Engine::Render() {
 	SDL_SetRenderDrawColor(renderer, 128, 0, 128, 255);
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, player.GetSprite(), player.GetSrc(), player.GetDest());
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 27; i++)
 		SDL_RenderCopy(renderer, floor[i].GetSprite(), (floor+i)->GetSrc(), (floor+i)->GetDest());
 	SDL_RenderPresent(renderer);
 }

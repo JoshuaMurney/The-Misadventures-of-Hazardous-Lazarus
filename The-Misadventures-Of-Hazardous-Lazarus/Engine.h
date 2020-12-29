@@ -33,7 +33,7 @@ class Engine
 		SDL_Renderer* renderer;
 
 		Player player;
-		Sprite floor[20];
+		Sprite floor[27];
 
 		SDL_Texture* lazarusSide;
 		SDL_Texture* ground;
@@ -44,6 +44,7 @@ class Engine
 		void Wake();
 		void HandleEvents();
 		bool KeyDown(SDL_Scancode c);
+		void CheckCollision();
 		void Update();
 		void Render();
 		void Sleep();

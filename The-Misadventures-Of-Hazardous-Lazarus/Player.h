@@ -18,7 +18,6 @@ class Player : public Sprite
 		void SetSpeed(short spd);
 		void TakeDamage(float hp);
 		void Update();
-		void Move();
 		void Jump();
 		void Stop();
 		void StopX();
