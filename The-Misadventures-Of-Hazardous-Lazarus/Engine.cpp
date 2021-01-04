@@ -20,6 +20,7 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 				if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG)) {
 					lazarusSide = IMG_LoadTexture(renderer, "Sprites/Lazarus Side.png");
 					ground = IMG_LoadTexture(renderer, "Sprites/Ground.png");
+					batTexture = IMG_LoadTexture(renderer, "Sprites/Bat.png");
 				}
 				else
 					return false;
@@ -38,6 +39,7 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 	running = true;
 
 	player = { {0, 0, 48, 126}, {600, 100, 48, 126}, lazarusSide, PLAYER_W, PLAYER_H };
+	bat = { {0, 0, 47, 21}, {96, 96, 48, 21}, batTexture, 48, 21, 1, 0.5, (48 * 5)};
 	for (int i = 0; i < 20; i++) {
 		floor[i] = { {0, 0, 48, 48}, {(48 * i), (48 * 11), 48, 48}, ground, 48, 48 };
 	}
@@ -105,6 +107,7 @@ void Engine::Update() {
 		player.SetGrounded(false);
 	}
 	player.Update();
+	bat.Update();
 	CheckCollision();
 }
 
@@ -113,6 +116,7 @@ void Engine::Render() {
 	SDL_SetRenderDrawColor(renderer, 128, 0, 128, 255);
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, player.GetSprite(), player.GetSrc(), player.GetDest());
+	SDL_RenderCopyEx(renderer, bat.GetSprite(), bat.GetSrc(), bat.GetDest(), 0.0, NULL, static_cast<SDL_RendererFlip>(bat.GetDirection()));
 	for (int i = 0; i < 27; i++)
 		SDL_RenderCopy(renderer, floor[i].GetSprite(), (floor+i)->GetSrc(), (floor+i)->GetDest());
 	SDL_RenderPresent(renderer);
@@ -123,6 +127,7 @@ void Engine::Clean() {
 	cout << "Cleaning Engine" << endl;
 	SDL_DestroyTexture(lazarusSide);
 	SDL_DestroyTexture(ground);
+	SDL_DestroyTexture(batTexture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

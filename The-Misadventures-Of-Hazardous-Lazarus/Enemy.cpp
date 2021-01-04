@@ -3,6 +3,7 @@
 Enemy::Enemy(SDL_Rect src, SDL_Rect dest, SDL_Texture* spr, int w, int h, short hp, float d) : Sprite(src, dest, spr, w, h) {
 	health = hp;
 	damage = d;
+	direction = 1;
 }
 
 short Enemy::GetHealth() {
@@ -20,4 +21,10 @@ void Enemy::TakeDamage() {
 float Enemy::GetDamage() {
 	return damage;
 }
+
+bool Enemy::GetDirection() {
+	return direction;
+}
+
+void Enemy::Update() {}
 

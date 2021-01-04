@@ -33,6 +33,9 @@
     <ClCompile Include="Pickup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -50,12 +53,18 @@
     <ClInclude Include="Pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Sprites\Lazarus Side.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Sprites\Ground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Bat.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -19,6 +19,7 @@
 #include "SDL_mixer.h"
 #include "Sprite.h"
 #include "Player.h"
+#include "Bat.h"
 #include <iostream>
 #include <vector>
 
@@ -33,10 +34,12 @@ class Engine
 		SDL_Renderer* renderer;
 
 		Player player;
+		Bat bat;
 		Sprite floor[27];
 
 		SDL_Texture* lazarusSide;
 		SDL_Texture* ground;
+		SDL_Texture* batTexture;
 
 		//Engine Functions
 		int Init(const char* title, int xPos, int yPos, int width, int height, int flags);
