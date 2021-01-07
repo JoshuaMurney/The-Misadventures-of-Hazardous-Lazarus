@@ -7,7 +7,8 @@ class Player : public Sprite
 		float health;
 		short speed;
 		bool isGrounded;
-		double accelX, accelY, velocityX, velocityY, maxVelX, maxVelY, drag, grav;
+		bool batForm;
+		double accelX, accelY, velocityX, velocityY, maxVelX, maxVelY, jumpForce, drag, grav, speedModifier;
 
 	public:
 		Player() {}
@@ -18,7 +19,6 @@ class Player : public Sprite
 		void SetSpeed(short spd);
 		void TakeDamage(float hp);
 		void Update();
-		void Jump();
 		void Stop();
 		void StopX();
 		void StopY();
@@ -26,6 +26,9 @@ class Player : public Sprite
 		void SetAccelY(double a);
 		bool IsGrounded();
 		void SetGrounded(bool flag);
+		bool IsBatForm();
+		void SetBatForm(bool flag);
+		void SetSpeedModifier(double spd);
 		double GetVelX();
 		double GetVelY();
 		void SetX(float x);

@@ -61,6 +61,25 @@ void Engine::HandleEvents() {
 		case SDL_QUIT:
 			running = false;
 			break;
+		case SDL_KEYUP:
+			switch (event.key.keysym.sym) {
+				case SDLK_SPACE:
+					if (player.IsGrounded()) {
+						player.SetAccelY(-20.0);
+						player.SetGrounded(false);
+					}
+					break;
+				case SDLK_LSHIFT:
+					if (player.IsBatForm()) {
+						player.SetBatForm(false);
+						player.SetSpeedModifier(1.0);
+					}
+					else {
+						player.SetBatForm(true);
+						player.SetSpeedModifier(0.75);
+					}
+					break;
+			}
 		}
 	}
 }
@@ -102,10 +121,15 @@ void Engine::Update() {
 	else
 		player.StopX();
 
-	if (KeyDown(SDL_SCANCODE_SPACE) && player.IsGrounded()) {
-		player.SetAccelY(-20.0);
-		player.SetGrounded(false);
+	if (player.IsBatForm()) {
+		if (KeyDown(SDL_SCANCODE_W) && player.GetDest()->y > TOP_BORDER)
+			player.SetAccelY(-1.0);
+		else if (KeyDown(SDL_SCANCODE_S) && player.GetDest()->y < BOTTOM_BORDER)
+			player.SetAccelY(1.0);
+		else
+			player.StopY();
 	}
+
 	player.Update();
 	bat.Update();
 	CheckCollision();

@@ -5,9 +5,12 @@ Player::Player(SDL_Rect src, SDL_Rect dest, SDL_Texture* spr, int w, int h) : Sp
 	health = 4.0;
 	speed = 4;
 	isGrounded = false;
+	batForm = false;
 	accelX = accelY = velocityX = velocityY = 0;
 	maxVelX = 10;
-	maxVelY = 60.0;
+	maxVelY = 10;
+	jumpForce = 60.0;
+	speedModifier = 1.0;
 	grav = 8.0;
 	drag = 0.88;
 }
@@ -37,18 +40,21 @@ void Player::TakeDamage(float hp) {
 void Player::Update() {
 	velocityX += accelX;
 	velocityX *= (isGrounded ? drag : 1.0);
-	velocityX = std::min(std::max(velocityX, -maxVelX), maxVelX);
+	velocityX = std::min(std::max(velocityX, -(maxVelX * speedModifier)), (maxVelX * speedModifier));
 	dest.x += (int)velocityX;
 
-	velocityY += accelY + grav * 0.1;
-	velocityY = std::min(std::max(velocityY, -maxVelY), (grav));
-	dest.y += (int)velocityY;
+	if (batForm) {
+		velocityY += accelY;
+		velocityY = std::min(std::max(velocityY, -(maxVelY * speedModifier)), (maxVelY * speedModifier));
+		dest.y += (int)velocityY;
+	}
+	else {
+		velocityY += accelY + grav * 0.1;
+		velocityY = std::min(std::max(velocityY, -jumpForce), (grav));
+		dest.y += (int)velocityY;
+	}
 
 	accelX = accelY = 0.0;
-}
-
-void Player::Jump() {
-
 }
 
 void Player::Stop() {
@@ -78,6 +84,18 @@ bool Player::IsGrounded() {
 
 void Player::SetGrounded(bool flag) {
 	isGrounded = flag;
+}
+
+bool Player::IsBatForm() {
+	return batForm;
+}
+
+void Player::SetBatForm(bool flag) {
+	batForm = flag;
+}
+
+void Player::SetSpeedModifier(double spd) {
+	speedModifier = spd;
 }
 
 double Player::GetVelX() {

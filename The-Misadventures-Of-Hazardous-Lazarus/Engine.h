@@ -10,7 +10,7 @@
 #define PLAYER_H 126
 
 //Border Constants
-#define TOP_BORDER HEIGHT / 2
+#define TOP_BORDER 0
 #define BOTTOM_BORDER HEIGHT - PLAYER_H
 #define LEFT_BORDER 0
 #define RIGHT_BORDER WIDTH - PLAYER_W
