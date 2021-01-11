@@ -32,14 +32,18 @@ class Engine
 		const Uint8* keystates;
 		SDL_Window* window;
 		SDL_Renderer* renderer;
+		bool echoTriggered;
+		double echoSize;
 
 		Player player;
 		Bat bat;
+		Sprite echo;
 		Sprite floor[27];
 
 		SDL_Texture* lazarusSide;
 		SDL_Texture* ground;
 		SDL_Texture* batTexture;
+		SDL_Texture* echoTexture;
 
 		//Engine Functions
 		int Init(const char* title, int xPos, int yPos, int width, int height, int flags);

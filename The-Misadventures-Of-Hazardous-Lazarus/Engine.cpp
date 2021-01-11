@@ -21,6 +21,7 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 					lazarusSide = IMG_LoadTexture(renderer, "Sprites/Lazarus Side.png");
 					ground = IMG_LoadTexture(renderer, "Sprites/Ground.png");
 					batTexture = IMG_LoadTexture(renderer, "Sprites/Bat.png");
+					echoTexture = IMG_LoadTexture(renderer, "Sprites/Echo.png");
 				}
 				else
 					return false;
@@ -38,7 +39,9 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 	keystates = SDL_GetKeyboardState(nullptr);
 	running = true;
 
+	echoTriggered = false;
 	player = { {0, 0, 48, 126}, {600, 100, 48, 126}, lazarusSide, PLAYER_W, PLAYER_H };
+	echo = { { 0, 0, 1920, 1452 }, {((player.GetDest()->x + (player.GetDest()->w / 2)) - WIDTH), ((player.GetDest()->y + (player.GetDest()->h / 2)) - HEIGHT), WIDTH * 2, HEIGHT * 2}, echoTexture, WIDTH * 2, HEIGHT * 2 };
 	bat = { {0, 0, 47, 21}, {96, 96, 48, 21}, batTexture, 48, 21, 1, 0.5, (48 * 5)};
 	for (int i = 0; i < 20; i++) {
 		floor[i] = { {0, 0, 48, 48}, {(48 * i), (48 * 11), 48, 48}, ground, 48, 48 };
@@ -63,7 +66,7 @@ void Engine::HandleEvents() {
 			break;
 		case SDL_KEYUP:
 			switch (event.key.keysym.sym) {
-				case SDLK_SPACE:
+				case SDLK_w:
 					if (player.IsGrounded()) {
 						player.SetAccelY(-20.0);
 						player.SetGrounded(false);
@@ -73,11 +76,20 @@ void Engine::HandleEvents() {
 					if (player.IsBatForm()) {
 						player.SetBatForm(false);
 						player.SetSpeedModifier(1.0);
+						player.SetSprite(lazarusSide);
+						player.SetSrc({ 0, 0, 48, 126 });
+						player.SetDest({ player.GetDest()->x, player.GetDest()->y - 53, 48, 126 });
 					}
 					else {
 						player.SetBatForm(true);
 						player.SetSpeedModifier(0.75);
+						player.SetSprite(batTexture);
+						player.SetSrc({ 0, 0, 47, 21 });
+						player.SetDest({ player.GetDest()->x, player.GetDest()->y + 53, 48, 21 });
 					}
+					break;
+				case SDLK_SPACE:
+					echoTriggered = true;
 					break;
 			}
 		}
@@ -130,7 +142,23 @@ void Engine::Update() {
 			player.StopY();
 	}
 
+	if (echoTriggered || echoSize > 0.0) {
+		if (echoTriggered) {
+			echoSize += 0.125;
+			if (echoSize >= 2.0) {
+				echoSize = 2.0;
+				echoTriggered = false;
+			}
+		}
+		else {
+			echoSize -= 0.0025;
+			if (echoSize < 0.0)
+				echoSize = 0.0;
+		}
+	}
+
 	player.Update();
+	echo.SetDest({((player.GetDest()->x + (player.GetDest()->w / 2)) - WIDTH - int(WIDTH * echoSize)), ((player.GetDest()->y + (player.GetDest()->h / 2)) - HEIGHT - int(HEIGHT * echoSize)), (WIDTH * 2) + int(WIDTH * 2 * echoSize), (HEIGHT * 2) + int(HEIGHT * 2 * echoSize)});
 	bat.Update();
 	CheckCollision();
 }
@@ -143,6 +171,7 @@ void Engine::Render() {
 	SDL_RenderCopyEx(renderer, bat.GetSprite(), bat.GetSrc(), bat.GetDest(), 0.0, NULL, static_cast<SDL_RendererFlip>(bat.GetDirection()));
 	for (int i = 0; i < 27; i++)
 		SDL_RenderCopy(renderer, floor[i].GetSprite(), (floor+i)->GetSrc(), (floor+i)->GetDest());
+	SDL_RenderCopy(renderer, echo.GetSprite(), echo.GetSrc(), echo.GetDest());
 	SDL_RenderPresent(renderer);
 }
 

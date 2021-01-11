@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Sprites\Bat.png" />
+    <Image Include="Sprites\Echo.png" />
     <Image Include="Sprites\Ground.png" />
     <Image Include="Sprites\Lazarus Side.png" />
   </ItemGroup>
