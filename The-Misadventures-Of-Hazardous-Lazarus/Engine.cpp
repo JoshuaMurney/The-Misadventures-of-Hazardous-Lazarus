@@ -181,6 +181,7 @@ void Engine::Clean() {
 	SDL_DestroyTexture(lazarusSide);
 	SDL_DestroyTexture(ground);
 	SDL_DestroyTexture(batTexture);
+	SDL_DestroyTexture(echoTexture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
