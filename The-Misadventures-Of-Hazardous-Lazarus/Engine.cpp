@@ -22,6 +22,7 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 					ground = IMG_LoadTexture(renderer, "Sprites/Ground.png");
 					batTexture = IMG_LoadTexture(renderer, "Sprites/Bat.png");
 					echoTexture = IMG_LoadTexture(renderer, "Sprites/Echo.png");
+					castleBG = IMG_LoadTexture(renderer, "Sprites/background.png");
 				}
 				else
 					return false;
@@ -51,6 +52,7 @@ int Engine::Init(const char* title, int xPos, int yPos, int width, int height, i
 	}
 	floor[25] = { {0, 0, 48, 48}, {480, (48 * 6), 48, 48}, ground, 48, 48 };
 	floor[26] = { {0, 0, 48, 48}, {480, (48 * 5), 48, 48}, ground, 48, 48 };
+	background = { {0, 0, 480, 240}, {0, -150, 1920, 960}, castleBG, 480, 240 };
 
 	cout << "Engine Running successfully" << endl;
 	return true;
@@ -167,7 +169,9 @@ void Engine::Update() {
 void Engine::Render() {
 	SDL_SetRenderDrawColor(renderer, 128, 0, 128, 255);
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, player.GetSprite(), player.GetSrc(), player.GetDest());
+	// Render background
+	SDL_RenderCopy(renderer, castleBG, background.GetSrc(), background.GetDest());
+	SDL_RenderCopyEx(renderer, player.GetSprite(), player.GetSrc(), player.GetDest(), 0.0, NULL, static_cast<SDL_RendererFlip>(player.GetDirection()));
 	SDL_RenderCopyEx(renderer, bat.GetSprite(), bat.GetSrc(), bat.GetDest(), 0.0, NULL, static_cast<SDL_RendererFlip>(bat.GetDirection()));
 	for (int i = 0; i < 27; i++)
 		SDL_RenderCopy(renderer, floor[i].GetSprite(), (floor+i)->GetSrc(), (floor+i)->GetDest());

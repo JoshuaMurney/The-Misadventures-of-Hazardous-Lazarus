@@ -13,6 +13,7 @@ Player::Player(SDL_Rect src, SDL_Rect dest, SDL_Texture* spr, int w, int h) : Sp
 	speedModifier = 1.0;
 	grav = 8.0;
 	drag = 0.88;
+	direction = 0;
 }
  
 float Player::GetHealth() {
@@ -72,6 +73,10 @@ void Player::StopY() {
 
 void Player::SetAccelX(double a) {
 	accelX = a;
+	if (accelX > 0)
+		direction = 0;
+	else
+		direction = 1;
 }
 
 void Player::SetAccelY(double a) {
@@ -114,5 +119,7 @@ void Player::SetY(float y) {
 	dest.y = y;
 }
 
-
+bool Player::GetDirection() {
+	return direction;
+}
 

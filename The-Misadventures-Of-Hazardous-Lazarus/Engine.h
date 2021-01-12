@@ -39,11 +39,13 @@ class Engine
 		Bat bat;
 		Sprite echo;
 		Sprite floor[27];
+		Sprite background;
 
 		SDL_Texture* lazarusSide;
 		SDL_Texture* ground;
 		SDL_Texture* batTexture;
 		SDL_Texture* echoTexture;
+		SDL_Texture* castleBG;
 
 		//Engine Functions
 		int Init(const char* title, int xPos, int yPos, int width, int height, int flags);

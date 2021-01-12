@@ -160,6 +160,7 @@
     <ClInclude Include="Sprite.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Sprites\background.png" />
     <Image Include="Sprites\Bat.png" />
     <Image Include="Sprites\Echo.png" />
     <Image Include="Sprites\Ground.png" />

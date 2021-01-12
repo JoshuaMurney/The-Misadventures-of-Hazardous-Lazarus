@@ -70,5 +70,8 @@
     <Image Include="Sprites\Echo.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Sprites\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

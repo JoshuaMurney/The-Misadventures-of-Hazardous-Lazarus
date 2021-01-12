@@ -9,6 +9,7 @@ class Player : public Sprite
 		bool isGrounded;
 		bool batForm;
 		double accelX, accelY, velocityX, velocityY, maxVelX, maxVelY, jumpForce, drag, grav, speedModifier;
+		bool direction;
 
 	public:
 		Player() {}
@@ -33,5 +34,6 @@ class Player : public Sprite
 		double GetVelY();
 		void SetX(float x);
 		void SetY(float y);
+		bool GetDirection();
 };
 
